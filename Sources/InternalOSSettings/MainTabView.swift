@@ -34,6 +34,12 @@ struct MainTabView: View {
                     Label("Hardware", systemImage: "memorychip")
                 }
                 .tag(4)
+
+            DiagnosticsView()
+                .tabItem {
+                    Label("Diagnostics", systemImage: "stethoscope")
+                }
+                .tag(5)
         }
         .tint(.blue)
     }
