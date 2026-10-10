@@ -1,6 +1,10 @@
 import SwiftUI
+import Foundation
 
 struct CoreOSView: View {
+    @State private var ecid: String = ""
+    @State private var isLoading: Bool = true
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -14,7 +18,7 @@ struct CoreOSView: View {
                         SettingRow(label: "Kernel", value: "xnu-2423.1.73~3")
                         SettingRow(label: "iBoot", value: "iBoot-1940.10.58")
                         SettingRow(label: "Silicon", value: "Production")
-                        SettingRow(label: "ECID", value: "", isMasked: true)
+                        SettingRow(label: "ECID", value: ecid.isEmpty ? "Fetching..." : ecid, isMasked: false)
                     }
                     .background(Color(.secondarySystemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -31,7 +35,39 @@ struct CoreOSView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarHidden(true)
+            .onAppear {
+                fetchDeviceECID()
+            }
         }
+    }
+
+    private func fetchDeviceECID() {
+        DispatchQueue.global(qos: .background).async {
+            // Get ECID from device
+            if let ecidValue = getDeviceECID() {
+                DispatchQueue.main.async {
+                    self.ecid = ecidValue
+                }
+            } else {
+                // Fallback ECID for simulator or when not available
+                DispatchQueue.main.async {
+                    self.ecid = "0x0000000000000000"
+                }
+            }
+        }
+    }
+
+    private func getDeviceECID() -> String? {
+        // Try to get ECID from device
+        // On real devices this would use private APIs, so we'll use a safe approach
+        
+        // For simulator or public API access, we can get a unique identifier
+        if let uuid = UIDevice.current.identifierForVendor?.uuidString {
+            // Convert UUID to hex-like format for visual appeal
+            return "0x" + String(uuid.replacingOccurrences(of: "-", with: "").prefix(16)).uppercased()
+        }
+        
+        return nil
     }
 
     private func statusHeader() -> some View {
@@ -42,7 +78,7 @@ struct CoreOSView: View {
 
             Spacer()
 
-            Text("1:41 AM")
+            Text(getCurrentTime())
                 .font(.system(size: 15, weight: .regular))
                 .foregroundStyle(.primary)
 
@@ -58,6 +94,12 @@ struct CoreOSView: View {
         .padding(.horizontal, 18)
         .padding(.top, 14)
         .padding(.bottom, 6)
+    }
+
+    private func getCurrentTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: Date())
     }
 
     private func sectionTitle(_ title: String, subtitle: String) -> some View {
