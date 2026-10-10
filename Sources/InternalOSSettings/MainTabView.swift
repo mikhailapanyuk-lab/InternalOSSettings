@@ -11,23 +11,29 @@ struct MainTabView: View {
                 }
                 .tag(0)
 
+            KernelView()
+                .tabItem {
+                    Label("Kernel", systemImage: "terminal.fill")
+                }
+                .tag(1)
+
+            SecurityView()
+                .tabItem {
+                    Label("Security", systemImage: "lock.shield")
+                }
+                .tag(2)
+
+            IBootView()
+                .tabItem {
+                    Label("iBoot", systemImage: "bolt.fill")
+                }
+                .tag(3)
+
             HardwareView()
                 .tabItem {
                     Label("Hardware", systemImage: "memorychip")
                 }
-                .tag(1)
-
-            DiagnosticsView()
-                .tabItem {
-                    Label("Diagnostics", systemImage: "stethoscope")
-                }
-                .tag(2)
-
-            BootArgsView()
-                .tabItem {
-                    Label("Boot Args", systemImage: "terminal.fill")
-                }
-                .tag(3)
+                .tag(4)
         }
         .tint(.blue)
     }
