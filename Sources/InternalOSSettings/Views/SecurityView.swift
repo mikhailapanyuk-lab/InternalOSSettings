@@ -88,6 +88,11 @@ struct EntitlementPill: View {
     let value: String
     let granted: Bool
 
+    init(_ value: String, granted: Bool) {
+        self.value = value
+        self.granted = granted
+    }
+
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
