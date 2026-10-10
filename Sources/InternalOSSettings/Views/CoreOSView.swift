@@ -65,6 +65,8 @@ struct CoreOSView: View {
             return "CarPlay"
         case .vision:
             return "Vision Pro"
+        case .unspecified:
+            return "Unknown Device"
         @unknown default:
             return "Unknown Device"
         }
@@ -175,4 +177,8 @@ struct CoreOSView: View {
         .padding(.top, 16)
         .padding(.bottom, 20)
     }
+}
+
+#Preview {
+    CoreOSView()
 }
